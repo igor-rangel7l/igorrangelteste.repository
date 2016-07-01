@@ -13,4 +13,37 @@
 		<platform>all</platform>
 	</extension>
 </addon>
+
+<addon id="IgorLista Testes" name="Igor Lista Testes" version="0.0.1" provider-name="Igor Rangel e Cleiton Leonel Creton">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0"/>
+	<import addon="script.module.urlresolver" version="2.10.8"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="default.py">
+    <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <language>en</language>
+    <platform>all</platform>
+    <summary lang="en">Curta a minha Lista agora em forma de Add On com mais canais. Os Canais da MASTER TV foram Desenvolvidos por Cleiton Leonel Creton e Rogger Henrique e Filipe Carvalho  </summary>
+    <description lang="en">Curta a minha Lista agora em forma de Add On com mais canais. Os Canais da MASTER TV foram Desenvolvidos por Cleiton Leonel Creton e Rogger Henrique e Filipe Carvalho </description>
+    <platform>all</platform>
+  </extension>
+</addon>
+
+<addon id="script.module.urlresolver"
+     name="URLResolver"
+     version="2.10.12"
+     provider-name="Eldorado">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0" />
+    <import addon="script.module.t0mm0.common" version="2.0.0"/>
+  </requires>
+  <extension point="xbmc.python.module" library="lib" />
+  <extension point="xbmc.addon.metadata">
+    <platform>all</platform>
+    <summary lang="en">Resolve common video host URL's to be playable in XBMC/Kodi.</summary>
+    <description lang="en">Resolve common video host URL's to be playable in XBMC/Kodi, simplify addon development of video plugins requiring multi video hosts.</description>
+  </extension>
+</addon>
 </addons>
