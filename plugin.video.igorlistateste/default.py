@@ -21,7 +21,7 @@ from BeautifulSoup import BeautifulSoup
 h = HTMLParser.HTMLParser()
 
 versao = '0.0.1'
-addon_id = 'plugin.video.igorlistatestes'
+addon_id = 'plugin.video.igorlistateste'
 selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
 artfolder = addonfolder + '/resources/img/'
