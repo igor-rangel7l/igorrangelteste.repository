@@ -20,7 +20,7 @@ from BeautifulSoup import BeautifulStoneSoup, BeautifulSoup, BeautifulSOAP
 from BeautifulSoup import BeautifulSoup
 h = HTMLParser.HTMLParser()
 
-versao = '0.0.2'
+versao = '3.0.0'
 addon_id = 'plugin.video.igorlistateste'
 selfAddon = xbmcaddon.Addon(id=addon_id)
 addonfolder = selfAddon.getAddonInfo('path')
@@ -51,7 +51,10 @@ def  categorias():
         addDir('SERIES 24HRS',url_base+'0BxN0DzFjIeCaY2Nlc1NqNFJDajQ',4,'http://goo.gl/VIlrvY')	
         addDir('DESENHOS 24HRS',url_base+'0BxN0DzFjIeCaVldOcVpJaFp1SW8',4,'http://goo.gl/rBsS8A')
 	addDir('RADIOS',url_base+'0BxN0DzFjIeCaWkxvUS1ZeHh3OWc',4,'http://goo.gl/pMM1Bg')
-       
+	addDir('Filmes Teste','-',23,'')
+	addDir('GUIA',url2,22,'http://goo.gl/zMVuuP')
+       	addDir('Filmes Online Grátis','-',50,'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xap1/v/t1.0-1/c13.12.154.154/1237151_397828540319331_929212767_n.jpg?oh=2d75a2f623fe36e74a70bdaa93c01042&oe=565FF780&__gda__=1454060369_e426226c7accc8bace3b22d5e9e39a4d')
+
 def  tv_ao_vivo():
 
 	addDir('TV ABERTA',url_base+'0BxN0DzFjIeCaZkJtd2lKWjhuVG8',4,'http://goo.gl/0rcmjD')
@@ -171,8 +174,9 @@ def player_pxstream(name,url,iconimage):
 	status.update(33)
 	try:
 		ip = params[0]
-		playpath = params[1]
-		link = 'http://'+ip+'/wideedge/'+playpath+'/playlist.m3u8?AuthSign='+get_wms() +' '
+                live = params[1]
+		playpath = params[2]
+                link = 'http://'+ip+'/'+live+'/'+playpath+'/'+playlist+'.m3u8?AuthSign='+get_wms() +' '
 		listitem = xbmcgui.ListItem(name,thumbnailImage=iconimage)
 		listitem.setInfo("Video", {"Title":name})
 		status.update(66)
@@ -331,6 +335,287 @@ def abrir_guia(url):
     print codigo_fonte
    #match = re.compile(r'').findall(codigo_fonte)
    #print match
+
+
+
+
+######################FILME TESTE#######################3
+
+
+def menuonline():
+	addDir('Lançamentos','http://www.filmesonlinehd1.com/lancamentos',24,'http://png.clipart.me/graphics/thumbs/175/blue-fire-icon_175761860.jpg')
+	xbmc.executebuiltin('Container.SetViewMode(51)')
+
+def listarfilmesonline(url):
+	soup = gethtml(url)
+	table = soup.findAll("div",{"class":"peli"})[0]
+	filmes = table.findAll("div")
+	for filme in filmes:
+		name = filme.img['alt']
+		foto = re.compile(r'php(.*?h=185.*?)"').findall(str(filme))[0]
+		link = filme.a['href']
+		addDir(name.encode('utf8'),link,25,foto.replace('?src=',''),False)
+	try:
+		page = re.compile(r'class="nextpostslink" href="(.+?)"').findall(str(soup))[0]
+		addDir('Proxima Página',page,24,'http://www.inovamobil.com.br/images/icone_navegacao_05.gif')
+	except:
+		pass
+	xbmcplugin.setContent(int(sys.argv[1]), 'movies')
+	xbmc.executebuiltin('Container.SetViewMode(500)')
+
+def Playeronline(name,url,iconimage):
+	pg = 0
+	caixastatus = xbmcgui.DialogProgress()
+	caixastatus.create(addon_name, 'Procurando e Resolvendo Links..','Por Favor Aguardar...')
+	caixastatus.update(pg)
+	html = abrir_url(url)   
+	names = []
+	urls  = []
+	pg +=30 
+	caixastatus.update(pg)
+	try:
+		link = re.compile(r'src="(.*?vidzi.tv/embed.*?)"').findall(html)[0]
+		nhos = 'Vidiz'
+		names.append(nhos)
+		urls.append(link)
+	except:
+		pass
+	try:
+		link = re.compile(r'src="(.*?streamin.to/embed.*?)"').findall(html)[0]
+		nhos = 'Streamin.to'
+		names.append(nhos)
+		urls.append(link)
+	except:
+		pass
+	try:
+		link = re.compile(r'src="(.*?vidto.me.*?)"').findall(html)[0]
+		nhos = 'Vidto'
+		names.append(nhos)
+		urls.append(link)
+	except:
+		pass
+	try:
+		link = re.compile(r'src="(.*?cloudzilla.*?)"').findall(html)[0]
+		nhos = 'Cloudzilla'
+		names.append(nhos)
+		urls.append(link)
+	except:
+		pass
+	try:
+		link = re.compile(r'src="(.*?videomega.*?)"').findall(html)[0]
+		nhos = 'VideoMega'
+		names.append(nhos)
+		urls.append(link)
+	except:
+		pass
+	try:
+		link = re.compile(r'src="(.*?nowvideo.*?)"').findall(html)[0]
+		nhos = 'NowVideo'
+		names.append(nhos)
+		urls.append(link)
+	except:
+		pass
+	try:
+		link = re.compile(r'data-src="(.*?openload.co.*?)"').findall(html)[0]
+		nhos = 'Openload'
+		names.append(nhos)
+		urls.append(link)
+	except:
+		pass
+	#try:
+	#	link = re.compile(r'href="(.*?youwatch.org.*?)"').findall(html)[0]
+	#	media_url = urlresolver.resolve(link)
+	#	nhos = 'YouWatch'
+	#	urls.append(link)
+	#except:
+	#	pass
+	#try:
+	#	link = re.compile(r'href="(.*?flashx.tv.*?)"').findall(html)[0]
+	#	nhos = 'FlashX'
+	#	names.append(nhos)
+	#	urls.append(link)
+	#except:
+	#	pass
+	#try:
+	#	link = re.compile(r'"(.*?ok.ru.*?)"').findall(html)[0]
+	#	nhos = 'ok.ru'
+	#	names.append(nhos)
+	#	urls.append(link)
+	#except:
+	#	pass
+	#try:
+	#	link = re.compile(r'href="(.*?video.tt.*?)"').findall(html)[0]
+	#	nhos = 'video.tt'
+	#	names.append(nhos)
+	#	urls.append(link)
+	#except:
+	#	pass
+	pg +=30
+	caixastatus.update(pg)
+	opcao = xbmcgui.Dialog().select('Selecione o Host desejado:', names)
+	if opcao == -1 : return
+	pg +=30
+	caixastatus.update(pg)
+	url = urls[opcao]
+	media_url = urlresolver.resolve(url)
+	pg=100
+	caixastatus.update(pg)
+	caixastatus.close()
+	playlist = xbmc.PlayList(1)
+	playlist.clear()
+	listitem = xbmcgui.ListItem(name,thumbnailImage=iconimage)
+	listitem.setInfo("Video", {"Title":name})
+	listitem.setProperty('mimetype', 'video/mp4')
+	playlist.add(str(media_url),listitem)	
+	xbmcPlayer = xbmc.Player(xbmc.PLAYER_CORE_AUTO)
+	xbmcPlayer.play(playlist)
+
+##############filmes#####################	
+def menufilmes():
+	addDir('Categorias','-',10,'http://www.netshoping.com.br/layout/img/tit_categorias.png')
+	addDir('Favoritos','-',17,'http://www.iconesbr.net/iconesbr/2008/07/140/140_256x256.png')
+	xbmc.executebuiltin('Container.SetViewMode(500)')
+	
+
+def listarcat():
+	addDir('Ação','http://filmesserieshd.com/acao/',11,icon)
+	addDir('Animação','http://filmesserieshd.com/animacao/',11,icon)
+	addDir('Aventura','http://filmesserieshd.com/aventura/',11,icon)
+	addDir('Biografia','http://filmesserieshd.com/biografia/',11,icon)
+	addDir('Comédia','http://filmesserieshd.com/comedia/',11,icon)
+	addDir('Desenhos e Animes','http://filmesserieshd.com/desenhos-e-animes/',11,icon)
+	addDir('Drama','http://filmesserieshd.com/drama/',11,icon)
+	addDir('Ficção Científica','http://filmesserieshd.com/ficcao-cientifica/',11,icon)
+	addDir('Full HD 1080p','http://filmesserieshd.com/full-hd-1080p/',11,icon)
+	addDir('Guerra','http://filmesserieshd.com/guerra/',11,icon)
+	addDir('HD 720p','http://filmesserieshd.com/hd-720p/',11,icon)
+	addDir('Lançamentos','http://filmesserieshd.com/lancamentos/',11,icon)
+	addDir('Legendado','http://filmesserieshd.com/legendado/',11,icon)
+	addDir('Policial','http://filmesserieshd.com/policial/',11,icon)
+	addDir('Romance','http://filmesserieshd.com/uncategorized/',11,icon)
+	addDir('Séries','http://filmesserieshd.com/series/',11,icon)
+	addDir('Suspense','http://filmesserieshd.com/suspense/',11,icon)
+	addDir('Terror','http://filmesserieshd.com/terror/',11,icon)
+	xbmc.executebuiltin('Container.SetViewMode(51)')
+	
+def listarfilmes(url):
+	html = gethtml(url)
+	htmla = abrir_url(url)
+	soup = html.find("div",{"id":"categoria"})
+	filmes = soup.findAll("div",{"class":"item"})
+	for filme in filmes:
+		name = filme.img["alt"].encode('utf-8')
+		url = filme.a["href"] 
+		img = filme.img["src"]
+		titulo = name.replace('-','').replace('–','').replace('Assistir','').replace('Dublado','').replace('Online','').replace('1080p ','').replace('HD ','').replace('Legendado ','').replace('ou','').replace('/','').replace(' e ','')
+		addDir(titulo,url,12,img)
+	page = re.compile(r'<link rel="next" href="(.+?)" />').findall(str(htmla))[0]
+	addDir('Próxima Página >>',page,11,'http://jullianoegiselle.xpg.uol.com.br/proxima%20pagina.png')	
+	xbmc.executebuiltin('Container.SetViewMode(501)')	
+
+def menufilme(name,url,iconimage):	
+	addDir('Assistir o Filme: '+name,url,13,iconimage,False)
+	addDir('Sinopse',url,14,iconimage,False)
+	addDir('Trailer',name,15,iconimage,False)
+	addDir('Adicionar aos Favoritos',name+','+iconimage+','+url,16,'http://4.bp.blogspot.com/-gci8DGnKWYM/TZsWlCtafdI/AAAAAAAAAJo/I_Q7pqqANFg/s1600/add-favoritos.png',False)
+
+def playerfilmes(name,url,iconimage):
+	caixastatus = xbmcgui.DialogProgress()
+	caixastatus.create(addon_name, 'Resolvendo Links...','Por favor aguarde...')
+	caixastatus.update(10)
+	playlist = xbmc.PlayList(1)
+	playlist.clear()
+	html = abrir_url(url)
+	caixastatus.update(20)
+	try:
+		caixastatus.update(35)
+		seg = re.compile(r'<iframe width="560" height="315" src="(.+?)"').findall(html)[1]
+		html2 = abrir_url(seg)
+		seg2 = re.compile(r'http://videopw.com(.+?)"').findall(html2)[0]
+		pw = 'http://videopw.com'+seg2
+		html3 = abrir_url(pw)
+		link = re.compile(r'var vurl2 = "(.+?)"').findall(html3)[0]
+		listitem = xbmcgui.ListItem(name,thumbnailImage=iconimage)
+		listitem.setInfo("Video", {"Title":name.replace('Assistir o Filme: ','')+' [COLOR gray](Video PW)[/COLOR]'})
+		listitem.setProperty('mimetype', 'video/mp4')
+		playlist.add(link,listitem)
+		caixastatus.update(49)
+	except:
+		pass
+	try:
+		caixastatus.update(63)
+		seg = re.compile(r'<iframe width="560" height="315" src="(.+?)"').findall(html)[1]
+		html2 = abrir_url(seg)
+		seg2 = re.compile(r'http://neodrive.co/(.+?)"').findall(html2)[0]
+		neo = 'http://neodrive.co/'+seg2
+		html3 = abrir_url(neo)
+		link = re.compile(r'var vurl = "(.+?)"').findall(html3)[0]
+		listitem = xbmcgui.ListItem(name,thumbnailImage=iconimage)
+		listitem.setInfo("Video", {"Title":name.replace('Assistir o Filme: ','')+' [COLOR gray](Neo Drive)[/COLOR]'})
+		listitem.setProperty('mimetype', 'video/mp4')
+		playlist.add(link,listitem)
+		caixastatus.update(80)
+	except:
+		pass
+	caixastatus.update(90)	
+	xbmcPlayer = xbmc.Player(xbmc.PLAYER_CORE_AUTO)
+	xbmcPlayer.play(playlist)
+	caixastatus.update(100)
+	caixastatus.close()
+	
+
+def getsinopse(url):
+	try:
+		html = abrir_url(url)
+		desc = re.compile(r'<p>(.+?)<A HREF="').findall(html)[0]
+		if desc == '':
+			xbmcgui.Dialog().ok(addon_name, 'Sinopse não disponivel,Desculpe o transtorno.')
+		else:
+			xbmcgui.Dialog().ok('Sinopse', desc)
+	except:
+		xbmcgui.Dialog().ok(addon_name, 'Sinopse não disponivel,Desculpe o transtorno.')
+
+		
+def gettrailer(url):
+	caixastatus = xbmcgui.DialogProgress()
+	caixastatus.create(addon_name, 'Abrindo Trailer...','Por favor aguarde...')
+	html = abrir_url('https://www.youtube.com/results?search_query='+url.replace(' ','+')+'+trailer')
+	idd = re.compile('v=(.+?)"').findall(html)[0]
+	caixastatus.close()
+	xbmcPlayer = xbmc.Player()
+	xbmcPlayer.play('plugin://plugin.video.youtube/play/?video_id=' +idd)	
+	
+	
+def depois(url):
+	arquivo = open(fav, 'r')
+	texto = arquivo.readlines()
+	texto.append('\n'+url) 
+	arquivo = open(fav, 'w')
+	arquivo.writelines(texto)
+	arquivo.close()
+	xbmcgui.Dialog().ok(addon_name, 'Filme adicionado a lista de Favoritos.')
+
+def favoritos():
+	arquivo = open(fav, 'r').readlines()
+	for line in arquivo:
+		params = line.split(',')
+		try:
+			nome = params[0]
+			img = params[1].replace(' http','http')
+			rtmp = params[2]
+			addDir(nome,rtmp,12,img)
+		except:
+			pass
+	addDir('Limpar Favoritos','-',18,'https://cdn0.iconfinder.com/data/icons/icons-unleashed-vol1/256/-trash.png')	
+	xbmc.executebuiltin('Container.SetViewMode(500)')
+
+def limpar():
+	arquivo = open(fav, 'w')
+	arquivo.write('')
+	xbmcgui.Dialog().ok(addon_name, 'Lista de Favoritos limpa com sucesso.')
+	menufilmes()
+
+	
 
 ###############################################################################################################
 #                                                 FUNÇÕES                                                     #
@@ -571,5 +856,30 @@ elif mode==21:
 elif mode==22:
     print ""
     abrir_guia(url)	
+
+elif mode==23:
+	menuonline()
+
+elif mode==24:	
+	listarfilmesonline(url)
+
+elif mode==25:
+	Playeronline(name,url,iconimage)
+
+##########################################
+
+elif mode==50:
+	menuonline()
+elif mode==51:
+	categoriasonline()
+elif mode==52:	
+	listarfilmesonline(url)
+elif mode==53:
+	Playeronline(name,url,iconimage)	
+elif mode==54:
+	pesquisaonline()
+
+#########################################
+
 	
 xbmcplugin.endOfDirectory(int(sys.argv[1]))
